@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-15T00:00:00Z",
+  "plugins": [
+    {
+      "name": "@dsh-community/tui",
+      "description": "社区版·终端:官方 dsh 的薄 TUI 发行(挂参考 Ink 渲染,自己的 8 行 profile)",
+      "author": "dsh-community",
+      "repo": "https://github.com/kamanager2012/dsh-community",
+      "category": "ui",
+      "versions": [
+        {
+          "version": "0.1.0",
+          "testedDsh": "0.1.0-rc.6",
+          "notes": "与官方 rc.6 契约验证通过"
+        }
+      ]
+    },
+    {
+      "name": "@deepseek-harness-tui/dsh-tui",
+      "description": "参考实现:Claude Code 风格 Ink TUI(社区市场收录,便于一键安装对比)",
+      "author": "ccch1mneyyy",
+      "repo": "https://github.com/ccch1mneyyy/dsh-TUI",
+      "category": "ui",
+      "versions": [
+        {
+          "version": "0.6.1",
+          "testedDsh": "0.1.0-rc.6",
+          "notes": "参考项目,社区验证线 rc.6"
+        }
+      ]
+    },
+    {
+      "name": "dsh-working-activity",
+      "description": "工作状态行数据源:思考文案/运行中工具/回合摘要(官方生态插件)",
+      "author": "dsh-community",
+      "repo": "https://github.com/kamanager2012/dsh-community",
+      "category": "tool",
+      "versions": [
+        {
+          "version": "0.2.4",
+          "testedDsh": "0.1.0-rc.6",
+          "notes": "配合社区版·终端 working-activity 行"
+        }
+      ]
+    }
+  ]
+}
