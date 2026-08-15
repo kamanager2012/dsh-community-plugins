@@ -1,4 +1,6 @@
-# DSH 社区市场(Community Marketplace)
+# DSH 社区发行版(重制版)· 市场注册表
+
+> DSH 社区发行版 = 官方 DeepSeek Harness 的第三方重构发行。这里是发行版的市场组件注册表。
 
 官方 DeepSeek Harness 的社区插件目录。客户端是 [dsh-marketplace](https://github.com/kamanager2012/dsh-marketplace)
 (`dsh-marketplace list/search/info/install`)。
