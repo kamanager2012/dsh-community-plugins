@@ -1,7 +1,7 @@
 # DSH 社区市场(Community Marketplace)
 
-官方 DeepSeek Harness 的社区插件目录。客户端是 [dsh-community](https://github.com/kamanager2012/dsh-community)
-的 `marketplace` 命令(`dsh-community-tui marketplace`)。
+官方 DeepSeek Harness 的社区插件目录。客户端是 [dsh-marketplace](https://github.com/kamanager2012/dsh-marketplace)
+(`dsh-marketplace list/search/info/install`)。
 
 ## 提交插件
 
