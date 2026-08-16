@@ -26,15 +26,17 @@ existence → install → compose → runtime smoke
          → package digest → provenance → DSH compatibility matrix
 ```
 
-已自动化的验证（`scripts/verify.mjs`，每次 push / PR / 每日调度执行）：
+已自动化的验证（`scripts/verify.mjs` + `scripts/compose-check.mjs`，每次 push / PR / 每日调度执行）：
 
 | 层级 | 检查 | 状态 |
 |---|---|---|
 | existence | `npm view <name>@<version>` 存在且版本一致 | ✅ CI |
 | package digest | `npm dist.integrity` 与 catalog 记录一致 | ✅ CI |
+| provenance | npm 发布证明存在时记入 catalog | ✅ CI |
 | repo | 公开仓库 URL 可达（HTTP 200） | ✅ CI |
 | shape | 字段、分类、`testedDsh` 官方 rc 线 | ✅ CI |
-| install / compose / runtime smoke | 官方 `dsh plugin add` + 合成 + 冒烟 | 人工验证，证据写入 `notes` |
+| install / compose | 官方 `dsh plugin add` + `--dump-config` 合成断言，每插件独立 DSH_HOME | ✅ CI |
+| runtime smoke | 真实会话运行冒烟 | 人工验证，证据写入 `notes` |
 
 在这些证据补齐前，未匹配 Runtime 线的版本必须保持 `[UNVERIFIED]`。
 

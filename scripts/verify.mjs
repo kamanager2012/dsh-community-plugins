@@ -94,6 +94,19 @@ for (const plugin of catalog.plugins ?? []) {
         problems.push(`${spec}: integrity mismatch (catalog vs npm)`)
       }
     }
+    const provenance = npmView(spec, 'provenance.predicateType')
+    if (provenance !== undefined) {
+      if (version.provenance !== true) {
+        if (WRITE) {
+          version.provenance = true
+          changed = true
+        } else {
+          problems.push(`${spec}: npm provenance missing in catalog (rerun with --write-integrity)`)
+        }
+      }
+    } else if (version.provenance === true) {
+      problems.push(`${spec}: catalog claims provenance but npm has none`)
+    }
   }
   const status = httpStatus(plugin.repo)
   if (status === undefined || status >= 400) {
