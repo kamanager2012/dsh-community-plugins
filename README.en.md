@@ -12,12 +12,12 @@ provides browse, search, and install UX.
 
 ## Current catalog status
 
-The current validation set contains **7 third-party community plugins**. They were
+The current validation set contains **9 third-party community plugins**. They were
 installed through the official `dsh plugin add` path and compose-tested against the
 `0.1.0-rc.6` line. The catalog also contains community-owned and reference entries;
 do not treat the raw entry count as the number of third-party production-compatible plugins.
 
-The priority is evidence depth, not growing from 7 to 50 entries:
+The priority is evidence depth, not growing from 9 to 50 entries:
 
 ```text
 existence → install → compose → runtime smoke
@@ -25,6 +25,18 @@ existence → install → compose → runtime smoke
 ```
 
 Until those checks exist, versions without a matching Runtime line remain `[UNVERIFIED]`.
+
+The automated verification ladder currently covers:
+
+| Level | Check | Status |
+|---|---|---|
+| existence | `npm view <name>@<version>` exists at the declared version | ✅ CI |
+| package digest | npm `dist.integrity` matches the catalog | ✅ CI |
+| provenance | npm publication provenance is recorded when present | ✅ CI |
+| repo | public repository URL is reachable | ✅ CI |
+| shape | schema, category, and official `testedDsh` line | ✅ CI |
+| install / compose | official `dsh plugin add` plus `--dump-config`, isolated `DSH_HOME` per plugin | ✅ CI |
+| runtime smoke | real-session smoke test | Manual; record evidence in `notes` |
 
 ## Position in the ecosystem
 
