@@ -1,32 +1,52 @@
-# DSH 社区发行版(重制版)· 市场注册表
+# dsh-community-plugins
 
-> DSH 社区发行版 = 官方 DeepSeek Harness 的第三方重构发行。这里是发行版的市场组件注册表。
+**社区插件兼容性注册表（Compatibility Registry）**
 
-官方 DeepSeek Harness 的社区插件目录。客户端是 [dsh-marketplace](https://github.com/kamanager2012/dsh-marketplace)
-(`dsh-marketplace list/search/info/install`)。
+[English](README.en.md) | 简体中文
 
-## 提交插件
+本仓库只维护官方 DeepSeek Harness 插件的公开目录、版本和验证信息。
+它不是 Runtime、不是 Plugin Manager，也不是另一个发行版；安装仍尽量走官方
+`dsh plugin add` 链路。浏览和安装体验由
+[`dsh-marketplace`](https://github.com/kamanager2012/dsh-marketplace) 提供。
 
-1. 在 `catalog.json` 的 `plugins` 数组里加一条记录(按字母序)
-2. 开 PR;CI 会校验 JSON 格式与字段完整性
-3. 合并后,客户端拉取本仓库的 `catalog.json` 即可看到
+## 在六仓生态中的位置
 
-## 字段说明
+| 仓库 | 职责 | 入口 |
+|---|---|---|
+| [`dsh-community`](https://github.com/kamanager2012/dsh-community) | Canonical Product，唯一正式下载入口 | [Latest Release](https://github.com/kamanager2012/dsh-community/releases/latest) |
+| [`deepseek-harness-suite`](https://github.com/kamanager2012/deepseek-harness-suite) | Community Labs，实验能力验证 | [Labs](https://github.com/kamanager2012/deepseek-harness-suite) |
+| [`deepseek-harness-handbook`](https://github.com/kamanager2012/deepseek-harness-handbook) | 使用、验收和运维证据 | [在线手册](https://kamanager2012.github.io/deepseek-harness-handbook/) |
+| `dsh-community-plugins` | 插件兼容性元数据 | 本仓库的 `catalog.json` |
+| [`dsh-marketplace`](https://github.com/kamanager2012/dsh-marketplace) | 浏览、搜索和安装 UX | `dsh-marketplace` CLI |
+| [`dsh-community-edition`](https://github.com/kamanager2012/dsh-community-edition) | Merge & Archive | [历史参考](https://github.com/kamanager2012/dsh-community-edition) |
+
+## `catalog.json` 的职责
+
+注册表中的每个插件都应说明：
 
 | 字段 | 说明 |
 |---|---|
-| `name` | npm 包名(必须能 `dsh plugin add <name>` 安装) |
-| `description` | 一句话中文描述 |
-| `author` | 作者/组织 |
+| `name` | npm 包名，必须能被 `dsh plugin add <name>` 安装 |
+| `description` | 简短、可验证的插件描述 |
+| `author` | 作者或组织 |
 | `repo` | 源码仓库 URL |
-| `versions` | 已验证版本数组:`{ "version": "x.y.z", "testedDsh": "0.1.0-rc.6", "notes": "..." }` |
-| `category` | `ui` / `tool` / `provider` / `workflow` / `other` |
+| `versions` | 已验证版本数组：`version`、`testedDsh`、可选 `notes` |
+| `category` | `ui`、`tool`、`provider`、`workflow` 或 `other` |
 
-`testedDsh` 必须与 [dsh-community 契约](https://github.com/kamanager2012/dsh-community/tree/main/contracts)
-里的验证线一致;客户端对未标记版本的插件只显示"(未验证)"。
+`testedDsh` 表示官方 DSH Runtime 的实际验证线，例如 `0.1.0-rc.6`。
+它不是“最新版本”承诺；客户端应对没有匹配验证线的版本标记为
+`[UNVERIFIED]`，而不是默认为安全或兼容。
 
-## 收录原则
+## 提交插件
 
-- 只收录可公开安装的 npm 包(公开 registry)
-- 不收录需要私有凭据才能运行的插件
-- 插件必须声明它验证过的官方 DSH 版本线(rc 号)
+1. 在 `catalog.json` 的 `plugins` 数组中增加一条记录，并保持名称排序；
+2. 提交 Pull Request，让 CI 校验 JSON 结构和字段完整性；
+3. 提供公开源码、可安装包和对应的 Runtime 验证线；
+4. 合并后由 `dsh-marketplace` 读取目录，安装仍调用官方 `dsh plugin add`。
+
+## 收录边界
+
+- 只收录公开 registry 中可安装的 npm 包；
+- 不把需要未声明私有凭据才能运行的插件写成无条件可用；
+- 不用 README 或作者声明替代安装 smoke test 和版本证据；
+- 不在本仓库实现 Runtime、插件安装器或新的 Session 真源。
