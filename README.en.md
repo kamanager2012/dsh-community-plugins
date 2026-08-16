@@ -55,6 +55,11 @@ Every plugin entry should identify:
 mark an entry `[UNVERIFIED]` when no tested line matches their Runtime instead of
 assuming compatibility or safety.
 
+## Documentation
+
+- [Registry and verification guide](docs/registry-guide.en.md)
+- [中文验证指南](docs/registry-guide.md)
+
 ## Submit a plugin
 
 1. Add an entry to the alphabetized `plugins` array in `catalog.json`.

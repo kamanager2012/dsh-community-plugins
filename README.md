@@ -35,6 +35,11 @@ existence → install → compose → runtime smoke
 | [`dsh-marketplace`](https://github.com/kamanager2012/dsh-marketplace) | 浏览、搜索和安装 UX | `dsh-marketplace` CLI |
 | [`dsh-community-edition`](https://github.com/kamanager2012/dsh-community-edition) | Merge & Archive | [历史参考](https://github.com/kamanager2012/dsh-community-edition) |
 
+## 文档入口
+
+- [注册表与验证指南](docs/registry-guide.md)
+- [English verification guide](docs/registry-guide.en.md)
+
 ## `catalog.json` 的职责
 
 注册表中的每个插件都应说明：
