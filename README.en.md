@@ -63,9 +63,11 @@ assuming compatibility or safety.
 ## Submit a plugin
 
 1. Add an entry to the alphabetized `plugins` array in `catalog.json`.
-2. Open a Pull Request so CI can validate JSON shape and required fields.
+2. Open a Pull Request so CI can verify shape, npm existence, version, `dist.integrity`, and repo reachability.
 3. Provide a public source repository, an installable package, and the tested Runtime line.
 4. After merge, `dsh-marketplace` can read the catalog; installation still calls the official `dsh plugin add` command.
+
+Every catalog entry is also checked by the `compose-catalog` workflow: the official `dsh plugin add` install plus a `--dump-config` composition assertion per version, in an isolated `DSH_HOME`.
 
 ## Registry boundaries
 
