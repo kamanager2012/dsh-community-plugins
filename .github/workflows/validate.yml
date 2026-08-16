@@ -4,32 +4,16 @@ on:
   push:
     branches: [main]
   pull_request:
+  schedule:
+    - cron: '23 3 * * *'
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate catalog.json
-        run: |
-          node -e '
-          const fs = require("fs")
-          const catalog = JSON.parse(fs.readFileSync("catalog.json", "utf8"))
-          if (typeof catalog.version !== "number") throw new Error("catalog.version missing")
-          if (!Array.isArray(catalog.plugins)) throw new Error("catalog.plugins missing")
-          const names = new Set()
-          for (const plugin of catalog.plugins) {
-            for (const field of ["name", "description", "author", "repo", "category"]) {
-              if (typeof plugin[field] !== "string" || plugin[field] === "") throw new Error(`${plugin.name ?? "?"}.${field} missing`)
-            }
-            if (names.has(plugin.name)) throw new Error(`duplicate plugin: ${plugin.name}`)
-            names.add(plugin.name)
-            if (!["ui", "tool", "provider", "workflow", "other"].includes(plugin.category)) throw new Error(`${plugin.name}: bad category`)
-            if (!Array.isArray(plugin.versions) || plugin.versions.length === 0) throw new Error(`${plugin.name}: versions missing`)
-            for (const version of plugin.versions) {
-              if (typeof version.version !== "string" || typeof version.testedDsh !== "string") throw new Error(`${plugin.name}: bad version entry`)
-              if (!/^0\.1\.0-rc\.\d+$/u.test(version.testedDsh)) throw new Error(`${plugin.name}: testedDsh must be an official rc line`)
-            }
-          }
-          console.log(`catalog OK: ${catalog.plugins.length} plugins`)
-          '
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify catalog against npm and public repos
+        run: node scripts/verify.mjs

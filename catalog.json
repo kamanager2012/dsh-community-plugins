@@ -1,21 +1,7 @@
 {
   "version": 1,
-  "updatedAt": "2026-08-16T00:00:00Z",
+  "updatedAt": "2026-08-16T06:00:00Z",
   "plugins": [
-    {
-      "name": "@dsh-community/tui",
-      "description": "社区版·终端:官方 dsh 的薄 TUI 发行(挂参考 Ink 渲染,自己的 8 行 profile)",
-      "author": "dsh-community",
-      "repo": "https://github.com/kamanager2012/dsh-community",
-      "category": "ui",
-      "versions": [
-        {
-          "version": "0.1.0",
-          "testedDsh": "0.1.0-rc.6",
-          "notes": "与官方 rc.6 契约验证通过"
-        }
-      ]
-    },
     {
       "name": "@deepseek-harness-tui/dsh-tui",
       "description": "参考实现:Claude Code 风格 Ink TUI(社区市场收录,便于一键安装对比)",
@@ -26,7 +12,8 @@
         {
           "version": "0.6.1",
           "testedDsh": "0.1.0-rc.6",
-          "notes": "参考项目,社区验证线 rc.6"
+          "notes": "参考项目,社区验证线 rc.6",
+          "integrity": "sha512-3Ql0HVrpNrQnIDvRJ6oC2UeEQuU8MDI+BL5uuk3ge7FUdQ45EaQNteKBJXRIefeVPpYSY6AzqcYv+voO1E7gvg=="
         }
       ]
     },
@@ -40,7 +27,8 @@
         {
           "version": "0.1.0",
           "testedDsh": "0.1.0-rc.6",
-          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过"
+          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过",
+          "integrity": "sha512-oJT3Xy8/jpofp5elHmow6+4W2hPSJi35pYPMCHzoQqtSlhMVEmx5iyxTQ1jmPxJB9OsqUA7sTZcJD/MEH9609w=="
         }
       ]
     },
@@ -54,7 +42,8 @@
         {
           "version": "0.8.0",
           "testedDsh": "0.1.0-rc.6",
-          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过"
+          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过",
+          "integrity": "sha512-ye6r4o9JtL1xc4Nyqhtv+lIknz8/3dBfXH96GxMDf7JUq0SxdOrBR2wU4atTNw3Pyzk73p4U1qL0iyYnJ+fl9A=="
         }
       ]
     },
@@ -68,7 +57,8 @@
         {
           "version": "0.1.0",
           "testedDsh": "0.1.0-rc.6",
-          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过"
+          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过",
+          "integrity": "sha512-D7xb8M12cM9de6w6rPojYv8d3Pp+i06gAVIjs0gCTt6B/3ME0Dg8BPKxHWkdR1EfMt9G4TeBGnd8x4xuLx8DRA=="
         }
       ]
     },
@@ -82,7 +72,8 @@
         {
           "version": "0.1.5",
           "testedDsh": "0.1.0-rc.6",
-          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过"
+          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过",
+          "integrity": "sha512-EXk51g7F3DXtVXeaqxaMke9V6Du1xWU5qoIAG61KveJQNHyY98eNGH8UVZmmg++y1HkKn8iCCHqvYLSXAWW8FQ=="
         }
       ]
     },
@@ -96,7 +87,8 @@
         {
           "version": "0.1.0",
           "testedDsh": "0.1.0-rc.6",
-          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过"
+          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过",
+          "integrity": "sha512-dRN8i4CvUw9iD0XPTae9FfDwFHP1jpFcjY2oSpc6e8RBbJmLYya8hpYgChtohRpv9Fw8o46NRMv919zUMK6Niw=="
         }
       ]
     },
@@ -110,7 +102,8 @@
         {
           "version": "0.1.0",
           "testedDsh": "0.1.0-rc.6",
-          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过"
+          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过",
+          "integrity": "sha512-AF4mWnVSXjIQrsdMISWinKUGrDCXiy+vI40+GjTSchYwgzzN96TGj5twE3WMWwdl5VSDrYSOukA9sHy8qFKgWA=="
         }
       ]
     },
@@ -124,7 +117,8 @@
         {
           "version": "0.1.0",
           "testedDsh": "0.1.0-rc.6",
-          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过"
+          "notes": "社区验证线 rc.6:dsh plugin add 安装并合成通过",
+          "integrity": "sha512-xHrKxqQmiq9sgldWjSvLtyzq4yq1rmNQSBpJZmTxN9obo9+H6/xabAX7GSeDRW6MQcsMdL+ecn652nY1uLUstw=="
         }
       ]
     },
@@ -138,7 +132,8 @@
         {
           "version": "0.2.4",
           "testedDsh": "0.1.0-rc.6",
-          "notes": "配合社区版·终端 working-activity 行"
+          "notes": "配合社区版·终端 working-activity 行",
+          "integrity": "sha512-UwTFlL6XDwUuahGx57HB72uKAXpyEuPGA1sXFKlG1A8ggQVfZkrjpt4N4oq8UcA8a944oQUuY2aTcngErNzgGg=="
         }
       ]
     }

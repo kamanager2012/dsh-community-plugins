@@ -11,16 +11,30 @@
 
 ## 当前目录状态
 
-当前验证线包含 **7 个第三方社区插件**，均按 `0.1.0-rc.6` 使用官方
-`dsh plugin add` 安装并完成组合验证。目录中的社区自有包和参考项目另有标记，
-不要把目录条目总数直接当成第三方生产兼容数量。
+当前验证线包含 **9 个第三方社区插件**，均按 `0.1.0-rc.6` 使用官方
+`dsh plugin add` 安装并完成组合验证（另有 1 个参考 TUI 条目）。不要把目录条目总数
+直接当成第三方生产兼容数量。
 
-当前优先级不是把数量从 7 扩到 50，而是提高每个条目的证据深度：
+> 2026-08-16 起移除了 `@dsh-community/tui` 条目：它尚未发布到公共 npm
+> registry，不符合「必须能 `dsh plugin add <name>` 安装」的收录原则。社区版终端
+> 本身随 `dsh-community` 发行，不属于本注册表。
+
+当前优先级不是把数量从 9 扩到 50，而是提高每个条目的证据深度：
 
 ```text
 existence → install → compose → runtime smoke
          → package digest → provenance → DSH compatibility matrix
 ```
+
+已自动化的验证（`scripts/verify.mjs`，每次 push / PR / 每日调度执行）：
+
+| 层级 | 检查 | 状态 |
+|---|---|---|
+| existence | `npm view <name>@<version>` 存在且版本一致 | ✅ CI |
+| package digest | `npm dist.integrity` 与 catalog 记录一致 | ✅ CI |
+| repo | 公开仓库 URL 可达（HTTP 200） | ✅ CI |
+| shape | 字段、分类、`testedDsh` 官方 rc 线 | ✅ CI |
+| install / compose / runtime smoke | 官方 `dsh plugin add` + 合成 + 冒烟 | 人工验证，证据写入 `notes` |
 
 在这些证据补齐前，未匹配 Runtime 线的版本必须保持 `[UNVERIFIED]`。
 
