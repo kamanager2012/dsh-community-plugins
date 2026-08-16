@@ -26,6 +26,12 @@ existence → install → compose → runtime smoke
 
 Until those checks exist, versions without a matching Runtime line remain `[UNVERIFIED]`.
 
+The three Community endpoints are shipped by
+[`dsh-community`](https://github.com/kamanager2012/dsh-community): WSL/Linux Terminal,
+Windows Desktop, and macOS Desktop. Official Web is an upstream companion and the
+Linux AppImage is optional/secondary; this registry records plugin compatibility and
+does not distribute those endpoints.
+
 The automated verification ladder currently covers:
 
 | Level | Check | Status |
