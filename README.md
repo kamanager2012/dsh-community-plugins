@@ -9,6 +9,21 @@
 `dsh plugin add` 链路。浏览和安装体验由
 [`dsh-marketplace`](https://github.com/kamanager2012/dsh-marketplace) 提供。
 
+## 当前目录状态
+
+当前验证线包含 **7 个第三方社区插件**，均按 `0.1.0-rc.6` 使用官方
+`dsh plugin add` 安装并完成组合验证。目录中的社区自有包和参考项目另有标记，
+不要把目录条目总数直接当成第三方生产兼容数量。
+
+当前优先级不是把数量从 7 扩到 50，而是提高每个条目的证据深度：
+
+```text
+existence → install → compose → runtime smoke
+         → package digest → provenance → DSH compatibility matrix
+```
+
+在这些证据补齐前，未匹配 Runtime 线的版本必须保持 `[UNVERIFIED]`。
+
 ## 在六仓生态中的位置
 
 | 仓库 | 职责 | 入口 |
