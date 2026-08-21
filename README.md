@@ -13,12 +13,9 @@
 
 当前验证线包含 **9 个第三方社区插件**，均按 `0.1.0-rc.6` 使用官方
 `dsh plugin add` 安装并完成组合验证（另有 1 个参考 TUI 条目）。不要把目录条目总数
-直接当成第三方生产兼容数量。Canonical 产品当前 Latest 是
-[`dsh-community` v0.1.1-rc.1](https://github.com/kamanager2012/dsh-community/releases/latest)
-（基于官方内核 `@deepseek-ai/dsh@0.1.1-rc.1`）。插件条目在该 pin 上重验之前，
-`testedDsh` 仍记 `0.1.0-rc.6`。正式产品当前基于官方内核 `@deepseek-ai/dsh@0.1.1-rc.1`
-（[`dsh-community` Latest](https://github.com/kamanager2012/dsh-community/releases/latest)）；
-注册表尚未在该 pin 上重跑插件验证，条目在 `0.1.1-rc.1` 上仍按 `[UNVERIFIED]` 处理。
+直接当成第三方生产兼容数量。Canonical 产品的 Latest / 内核 pin / 五个端以
+[`dsh-community/docs/current-release.json`](https://github.com/kamanager2012/dsh-community/blob/main/docs/current-release.json)
+为准。插件条目在该 pin 上重验之前，`testedDsh` 仍记 `0.1.0-rc.6`。
 
  > 2026-08-16 起移除了 `@dsh-community/tui` 条目：它尚未发布到公共 npm
  > registry，不符合「必须能 `dsh plugin add <name>` 安装」的收录原则。社区版终端
