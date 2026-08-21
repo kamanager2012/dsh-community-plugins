@@ -11,11 +11,11 @@
 
 ## 当前目录状态
 
-当前验证线包含 **9 个第三方社区插件**，均按 `0.1.0-rc.6` 使用官方
+当前验证线包含 **9 个第三方社区插件**，均按 `0.1.1-rc.1` 使用官方
 `dsh plugin add` 安装并完成组合验证（另有 1 个参考 TUI 条目）。不要把目录条目总数
 直接当成第三方生产兼容数量。Canonical 产品的 Latest / 内核 pin / 五个端以
 [`dsh-community/docs/current-release.json`](https://github.com/kamanager2012/dsh-community/blob/main/docs/current-release.json)
-为准。插件条目在该 pin 上重验之前，`testedDsh` 仍记 `0.1.0-rc.6`。
+为准。`testedDsh` 现为 `0.1.1-rc.1`（compose 已过；重启后仍可用未单测）。
 
  > 2026-08-16 起移除了 `@dsh-community/tui` 条目：它尚未发布到公共 npm
  > registry，不符合「必须能 `dsh plugin add <name>` 安装」的收录原则。社区版终端
@@ -75,7 +75,7 @@ existence → install → compose → runtime smoke
 | `versions` | 已验证版本数组：`version`、`testedDsh`、可选 `notes` |
 | `category` | `ui`、`tool`、`provider`、`workflow` 或 `other` |
 
-`testedDsh` 表示官方 DSH Runtime 的实际验证线，例如 `0.1.0-rc.6`。
+`testedDsh` 表示官方 DSH Runtime 的实际验证线，例如 `0.1.1-rc.1`。
 它不是“最新版本”承诺；客户端应对没有匹配验证线的版本标记为
 `[UNVERIFIED]`，而不是默认为安全或兼容。
 

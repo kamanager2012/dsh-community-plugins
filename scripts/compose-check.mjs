@@ -5,7 +5,9 @@
  *   dsh plugin --profile test add <name>@<version>
  *   dsh --profile test --dump-config   → must list the plugin
  *
- * Uses the pinned official runtime line from the catalog's testedDsh.
+ * Uses the catalog `testedDsh` unless `DSH_COMPOSE_RUNTIME` is set.
+ * `DSH_COMPOSE_BIN` skips `npx` and runs a local official `dsh` of that same
+ * runtime (needed when `npx` OOMs unpacking the kernel).
  */
 
 import { execFileSync } from 'node:child_process'
@@ -17,6 +19,15 @@ const catalog = JSON.parse(readFileSync('catalog.json', 'utf8'))
 const failures = []
 
 function run(args, env, timeoutMs = 180_000) {
+  const bin = process.env.DSH_COMPOSE_BIN?.trim()
+  if (bin) {
+    return execFileSync(bin, args, {
+      encoding: 'utf8',
+      env,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      timeout: timeoutMs,
+    })
+  }
   return execFileSync('npx', ['-y', ...args], {
     encoding: 'utf8',
     env,
@@ -31,16 +42,17 @@ async function checkPlugin(plugin) {
   try {
     for (const version of plugin.versions) {
       const spec = `${plugin.name}@${version.version}`
-      const dsh = `@deepseek-ai/dsh@${version.testedDsh}`
+      const runtime = process.env.DSH_COMPOSE_RUNTIME?.trim() || version.testedDsh
+      const prefix = process.env.DSH_COMPOSE_BIN?.trim() ? [] : [`@deepseek-ai/dsh@${runtime}`]
       try {
-        run([dsh, 'plugin', '--profile', 'test', 'add', spec], env)
+        run([...prefix, 'plugin', '--profile', 'test', 'add', spec], env)
       } catch (error) {
         failures.push(`${spec}: install failed\n${String(error.stdout ?? '')}${String(error.stderr ?? '')}`)
         continue
       }
       let dump
       try {
-        dump = run([dsh, '--profile', 'test', '--dump-config'], env, 120_000)
+        dump = run([...prefix, '--profile', 'test', '--dump-config'], env, 120_000)
       } catch (error) {
         failures.push(`${spec}: dump-config failed\n${String(error.stdout ?? '')}${String(error.stderr ?? '')}`)
         continue
@@ -48,7 +60,7 @@ async function checkPlugin(plugin) {
       if (!dump.includes(plugin.name)) {
         failures.push(`${spec}: installed but not listed in the composed profile`)
       } else {
-        process.stdout.write(`OK  ${spec} composes on ${version.testedDsh}\n`)
+        process.stdout.write(`OK  ${spec} composes on ${runtime}\n`)
       }
     }
   } finally {

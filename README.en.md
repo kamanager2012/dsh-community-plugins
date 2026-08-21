@@ -14,11 +14,11 @@ provides browse, search, and install UX.
 
 The current validation set contains **9 third-party community plugins**. They were
 installed through the official `dsh plugin add` path and compose-tested against the
-`0.1.0-rc.6` line. The catalog also contains community-owned and reference entries;
+`0.1.1-rc.1` line. The catalog also contains community-owned and reference entries;
 do not treat the raw entry count as the number of third-party production-compatible plugins.
 Canonical Latest / kernel pin / five endpoints live in
 [`dsh-community/docs/current-release.json`](https://github.com/kamanager2012/dsh-community/blob/main/docs/current-release.json).
-Keep `testedDsh` at `0.1.0-rc.6` until those entries are re-verified on that pin.
+`testedDsh` is `0.1.1-rc.1` (compose passed; restart-after-install is still unverified).
 
 The priority is evidence depth, not growing from 9 to 50 entries:
 
@@ -72,7 +72,7 @@ Every plugin entry should identify:
 | `category` | `ui`, `tool`, `provider`, `workflow`, or `other` |
 
 `testedDsh` records the official Runtime line actually tested, for example
-`0.1.0-rc.6`. It is not a promise to track the newest Runtime. Consumers should
+`0.1.1-rc.1`. It is not a promise to track the newest Runtime. Consumers should
 mark an entry `[UNVERIFIED]` when no tested line matches their Runtime instead of
 assuming compatibility or safety.
 

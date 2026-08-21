@@ -14,7 +14,7 @@
 import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
 
-const OFFICIAL_RC_LINES = ['0.1.0-rc.6']
+const OFFICIAL_RC_LINES = ['0.1.0-rc.6', '0.1.1-rc.1']
 const WRITE = process.argv.includes('--write-integrity')
 
 function npmView(packageSpec, field) {
