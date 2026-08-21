@@ -13,15 +13,20 @@
 
 当前验证线包含 **9 个第三方社区插件**，均按 `0.1.0-rc.6` 使用官方
 `dsh plugin add` 安装并完成组合验证（另有 1 个参考 TUI 条目）。不要把目录条目总数
-直接当成第三方生产兼容数量。
+直接当成第三方生产兼容数量。Canonical 产品当前 Latest 是
+[`dsh-community` v0.1.1-rc.1](https://github.com/kamanager2012/dsh-community/releases/latest)
+（基于官方内核 `@deepseek-ai/dsh@0.1.1-rc.1`）。插件条目在该 pin 上重验之前，
+`testedDsh` 仍记 `0.1.0-rc.6`。正式产品当前基于官方内核 `@deepseek-ai/dsh@0.1.1-rc.1`
+（[`dsh-community` Latest](https://github.com/kamanager2012/dsh-community/releases/latest)）；
+注册表尚未在该 pin 上重跑插件验证，条目在 `0.1.1-rc.1` 上仍按 `[UNVERIFIED]` 处理。
 
  > 2026-08-16 起移除了 `@dsh-community/tui` 条目：它尚未发布到公共 npm
  > registry，不符合「必须能 `dsh plugin add <name>` 安装」的收录原则。社区版终端
  > 本身随 `dsh-community` 发行，不属于本注册表。
 
-正式产品的三个社区端由 [`dsh-community`](https://github.com/kamanager2012/dsh-community)
-提供：WSL/Linux Terminal、Windows Desktop、macOS Desktop。官方 Web 是上游兼容入口，
-Linux AppImage 是可选/次要产物；本注册表只记录插件兼容性，不发行这些端。
+正式产品的五个社区端由 [`dsh-community`](https://github.com/kamanager2012/dsh-community)
+提供：WSL/Linux Terminal、Windows Desktop、macOS Desktop、Linux AppImage、Android（Labs）。官方 Web 是内核自带界面；
+本注册表只记录插件兼容性，不发行这些端。
 
 当前优先级不是把数量从 9 扩到 50，而是提高每个条目的证据深度：
 
