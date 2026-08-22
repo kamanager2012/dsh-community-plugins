@@ -47,6 +47,11 @@ The automated verification ladder currently covers:
 | install / compose | official `dsh plugin add` plus `--dump-config`, isolated `DSH_HOME` per plugin | ✅ CI |
 | runtime smoke | real-session smoke test | Manual; record evidence in `notes` |
 
+> Known limitation: GitHub automatically disables scheduled workflows after 60 days
+> without repository activity (email notification only). The daily drift checks depend
+> on these crons; after long quiet periods, run `node scripts/verify.mjs` and
+> `node scripts/compose-check.mjs` manually once — do not assume "CI green = still verified".
+
 ## Position in the ecosystem
 
 | Repository | Role | Entry |

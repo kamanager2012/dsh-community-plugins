@@ -43,6 +43,10 @@ existence → install → compose → runtime smoke
 | install / compose | 官方 `dsh plugin add` + `--dump-config` 合成断言，每插件独立 DSH_HOME | ✅ CI |
 | runtime smoke | 真实会话运行冒烟 | 人工验证，证据写入 `notes` |
 
+> 已知限制：GitHub 对 60 天无仓库活动的 schedule 会自动禁用（仅邮件通知）。
+> 每日漂移检测依赖这些 cron；长期无提交时请手动跑一次 `node scripts/verify.mjs`
+> 与 `node scripts/compose-check.mjs` 复核，不要默认"CI 绿 = 仍在验证"。
+
 在这些证据补齐前，未匹配 Runtime 线的版本必须保持 `[UNVERIFIED]`。
 
 ## 在六仓生态中的位置
