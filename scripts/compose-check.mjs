@@ -32,10 +32,12 @@ const STAGE_TIMEOUT_MS = 300_000
 
 /** One staged runtime per distinct version; checks on the same testedDsh reuse it. */
 const stagedRuntimes = new Map()
+/** Runtimes whose staging failed — never retry them per-plugin. */
+const failedRuntimes = new Map()
 
-function pnpmAvailable() {
+function pnpmAvailable(env = process.env) {
   try {
-    execFileSync('pnpm', ['--version'], { stdio: 'ignore', timeout: 15_000 })
+    execFileSync('pnpm', ['--version'], { stdio: 'ignore', timeout: 15_000, env })
     return true
   } catch {
     return false
@@ -47,46 +49,61 @@ function pickPm() {
 }
 
 /**
- * The official `dsh plugin … add` shells out to pnpm. CI runners ship npm +
- * yarn but not pnpm, so synthesize a shim via corepack and prepend it to the
- * child PATH. No-op when pnpm is already available.
+ * The official `dsh plugin … add` shells out to pnpm, and runtime staging is
+ * also fastest with it. CI runners ship npm + yarn but not pnpm, so
+ * synthesize a shim via corepack FIRST and prepend it to this process's PATH,
+ * making `pnpm` visible to both our own staging calls and every child.
+ * No-op when pnpm is already available. Returns extra child env (or {}).
  */
-function ensurePnpmOnPath(env) {
-  if (pnpmAvailable()) return env
+function ensurePnpmOnPath() {
+  if (pnpmAvailable()) return {}
   const shimDir = mkdtempSync(join(tmpdir(), 'dsh-compose-pnpm-shim-'))
   execFileSync('corepack', ['enable', '--install-directory', shimDir], {
     encoding: 'utf8',
     timeout: 60_000,
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...env, COREPACK_ENABLE_DOWNLOAD_PROMPT: '0' },
+    env: { ...process.env, COREPACK_ENABLE_DOWNLOAD_PROMPT: '0' },
   })
-  return { ...env, PATH: `${shimDir}:${env.PATH ?? ''}` }
+  process.env.PATH = `${shimDir}:${process.env.PATH ?? ''}`
+  return { PATH: process.env.PATH }
 }
 
 function stageRuntime(runtime) {
   const cached = stagedRuntimes.get(runtime)
-  if (cached) return cached
+  if (cached) return cached.bin
+  const failed = failedRuntimes.get(runtime)
+  if (failed) throw new Error(failed)
   const stage = mkdtempSync(join(tmpdir(), 'dsh-compose-runtime-'))
   writeFileSync(
     join(stage, 'package.json'),
     JSON.stringify({ name: 'dsh-compose-runtime', private: true }, null, 2) + '\n',
   )
-  execFileSync(
-    pickPm(),
-    ['add', '--ignore-scripts', `@deepseek-ai/dsh@${runtime}`],
-    {
-      cwd: stage,
-      encoding: 'utf8',
-      timeout: STAGE_TIMEOUT_MS,
-      stdio: ['ignore', 'pipe', 'pipe'],
-    },
-  )
+  try {
+    execFileSync(
+      pickPm(),
+      ['add', '--ignore-scripts', `@deepseek-ai/dsh@${runtime}`],
+      {
+        cwd: stage,
+        encoding: 'utf8',
+        timeout: STAGE_TIMEOUT_MS,
+        // npm swallows SIGTERM and keeps running; without SIGKILL the timeout
+        // never actually ends the call (observed as a 30-minute CI hang).
+        killSignal: 'SIGKILL',
+        stdio: ['ignore', 'pipe', 'pipe'],
+      },
+    )
+  } catch (error) {
+    const message = `${pickPm()} add @deepseek-ai/dsh@${runtime} failed (${error.message})`
+    failedRuntimes.set(runtime, message)
+    rmSync(stage, { recursive: true, force: true })
+    throw new Error(message)
+  }
   const manifest = JSON.parse(
     readFileSync(join(stage, 'node_modules', '@deepseek-ai', 'dsh', 'package.json'), 'utf8'),
   )
   const entry = { bin: join(stage, 'node_modules', '@deepseek-ai', 'dsh', manifest.bin.dsh) }
   stagedRuntimes.set(runtime, entry)
-  return entry
+  return entry.bin
 }
 
 function run(bin, args, env, timeoutMs = 180_000) {
@@ -110,7 +127,7 @@ async function checkPlugin(plugin) {
     // Fresh DSH_HOME per VERSION, not per plugin: stale installs from an
     // earlier version must not leak into a later "fresh install" assertion.
     const home = mkdtempSync(join(tmpdir(), 'dsh-compose-'))
-    let env = { ...process.env, DSH_HOME: home, CI: 'true' }
+    let env = { ...process.env, ...pnpmEnv, DSH_HOME: home, CI: 'true' }
     try {
       if (!SEMVER_RE.test(version.version)) {
         failures.push(`${plugin.name}@${version.version}: invalid semver; refusing to compose`)
@@ -121,13 +138,12 @@ async function checkPlugin(plugin) {
       let bin = process.env.DSH_COMPOSE_BIN?.trim()
       if (!bin) {
         try {
-          bin = stageRuntime(runtime).bin
+          bin = stageRuntime(runtime)
         } catch (error) {
           failures.push(`${spec}: runtime @${runtime} staging failed (${error.message})`)
           continue
         }
       }
-      env = ensurePnpmOnPath(env)
       try {
         run(bin, ['plugin', '--profile', 'test', 'add', spec], env)
       } catch (error) {
@@ -153,6 +169,9 @@ async function checkPlugin(plugin) {
 }
 
 const plugins = catalog.plugins ?? []
+// Put a pnpm on PATH before anything stages or installs (corepack shim when
+// the host has none), so both runtime staging and `dsh plugin add` use it.
+const pnpmEnv = ensurePnpmOnPath()
 for (const plugin of plugins) {
   await checkPlugin(plugin)
 }
