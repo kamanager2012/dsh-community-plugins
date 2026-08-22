@@ -12,10 +12,10 @@ provides browse, search, and install UX.
 
 ## Current catalog status
 
-The current validation set contains **9 third-party community plugins**. They were
-installed through the official `dsh plugin add` path and compose-tested against the
-`0.1.1-rc.1` line. The catalog also contains community-owned and reference entries;
-do not treat the raw entry count as the number of third-party production-compatible plugins.
+The catalog contains **9 entries in total = 8 third-party community plugins + 1 reference TUI entry**. The
+third-party plugins were installed through the official `dsh plugin add` path and compose-tested against the
+`0.1.1-rc.1` line.
+Do not treat the raw entry count as the number of third-party production-compatible plugins.
 Canonical Latest / kernel pin / five endpoints live in
 [`dsh-community/docs/current-release.json`](https://github.com/kamanager2012/dsh-community/blob/main/docs/current-release.json).
 `testedDsh` is `0.1.1-rc.1` (compose passed; restart-after-install is still unverified).

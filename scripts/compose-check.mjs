@@ -36,11 +36,24 @@ function run(args, env, timeoutMs = 180_000) {
   })
 }
 
+const NPM_NAME_RE = /^(@[a-z0-9-][a-z0-9-._]*\/)?[a-z0-9-][a-z0-9-._]*$/
+const SEMVER_RE = /^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/
+
 async function checkPlugin(plugin) {
-  const home = mkdtempSync(join(tmpdir(), 'dsh-compose-'))
-  const env = { ...process.env, DSH_HOME: home, CI: 'true' }
-  try {
-    for (const version of plugin.versions) {
+  if (!NPM_NAME_RE.test(plugin.name)) {
+    failures.push(`${plugin.name}: not a valid npm package name; refusing to compose`)
+    return
+  }
+  for (const version of plugin.versions) {
+    // Fresh DSH_HOME per VERSION, not per plugin: stale installs from an
+    // earlier version must not leak into a later "fresh install" assertion.
+    const home = mkdtempSync(join(tmpdir(), 'dsh-compose-'))
+    const env = { ...process.env, DSH_HOME: home, CI: 'true' }
+    try {
+      if (!SEMVER_RE.test(version.version)) {
+        failures.push(`${plugin.name}@${version.version}: invalid semver; refusing to compose`)
+        continue
+      }
       const spec = `${plugin.name}@${version.version}`
       const runtime = process.env.DSH_COMPOSE_RUNTIME?.trim() || version.testedDsh
       const prefix = process.env.DSH_COMPOSE_BIN?.trim() ? [] : [`@deepseek-ai/dsh@${runtime}`]
@@ -62,9 +75,9 @@ async function checkPlugin(plugin) {
       } else {
         process.stdout.write(`OK  ${spec} composes on ${runtime}\n`)
       }
+    } finally {
+      rmSync(home, { recursive: true, force: true })
     }
-  } finally {
-    rmSync(home, { recursive: true, force: true })
   }
 }
 
