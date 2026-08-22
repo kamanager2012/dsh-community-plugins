@@ -14,11 +14,11 @@ provides browse, search, and install UX.
 
 The catalog contains **9 entries in total = 8 third-party community plugins + 1 reference TUI entry**. The
 third-party plugins were installed through the official `dsh plugin add` path and compose-tested against the
-`0.1.1-rc.1` line.
+`0.1.1-rc.2` line.
 Do not treat the raw entry count as the number of third-party production-compatible plugins.
 Canonical Latest / kernel pin / five endpoints live in
 [`dsh-community/docs/current-release.json`](https://github.com/kamanager2012/dsh-community/blob/main/docs/current-release.json).
-`testedDsh` is `0.1.1-rc.1` (compose passed; restart-after-install is still unverified).
+`testedDsh` is `0.1.1-rc.2` (compose passed; restart-after-install is still unverified).
 
 The priority is evidence depth, not growing from 9 to 50 entries:
 
