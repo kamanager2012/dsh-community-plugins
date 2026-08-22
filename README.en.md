@@ -12,13 +12,13 @@ provides browse, search, and install UX.
 
 ## Current catalog status
 
-The current validation set contains **9 third-party community plugins**. They were
-installed through the official `dsh plugin add` path and compose-tested against the
-`0.1.1-rc.1` line. The catalog also contains community-owned and reference entries;
-do not treat the raw entry count as the number of third-party production-compatible plugins.
+The catalog contains **9 entries in total = 8 third-party community plugins + 1 reference TUI entry**. The
+third-party plugins were installed through the official `dsh plugin add` path and compose-tested against the
+`0.1.1-rc.2` line.
+Do not treat the raw entry count as the number of third-party production-compatible plugins.
 Canonical Latest / kernel pin / five endpoints live in
 [`dsh-community/docs/current-release.json`](https://github.com/kamanager2012/dsh-community/blob/main/docs/current-release.json).
-`testedDsh` is `0.1.1-rc.1` (compose passed; restart-after-install is still unverified).
+`testedDsh` is `0.1.1-rc.2` (compose passed; restart-after-install is still unverified).
 
 The priority is evidence depth, not growing from 9 to 50 entries:
 
@@ -46,6 +46,11 @@ The automated verification ladder currently covers:
 | shape | schema, category, and official `testedDsh` line | ✅ CI |
 | install / compose | official `dsh plugin add` plus `--dump-config`, isolated `DSH_HOME` per plugin | ✅ CI |
 | runtime smoke | real-session smoke test | Manual; record evidence in `notes` |
+
+> Known limitation: GitHub automatically disables scheduled workflows after 60 days
+> without repository activity (email notification only). The daily drift checks depend
+> on these crons; after long quiet periods, run `node scripts/verify.mjs` and
+> `node scripts/compose-check.mjs` manually once — do not assume "CI green = still verified".
 
 ## Position in the ecosystem
 
