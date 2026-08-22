@@ -17,6 +17,9 @@ import { fileURLToPath } from 'node:url'
 
 const OFFICIAL_RC_LINES = ['0.1.0-rc.6', '0.1.1-rc.1']
 const WRITE = process.argv.includes('--write-integrity')
+// Offline mode: shape-only verification with zero network access. Lets
+// contributors self-check a PR locally before CI hits npm/GitHub.
+const OFFLINE = process.argv.includes('--offline')
 
 const NPM_NAME_RE = /^(@[a-z0-9-][a-z0-9-._]*\/)?[a-z0-9-][a-z0-9-._]*$/
 const SEMVER_RE = /^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/
@@ -97,7 +100,10 @@ for (const plugin of catalog.plugins ?? []) {
     if (!OFFICIAL_RC_LINES.includes(version.testedDsh)) {
       problems.push(`${plugin.name}@${version.version}: testedDsh ${version.testedDsh} not in ${OFFICIAL_RC_LINES.join(', ')}`)
     }
-    if (shapeBroken) continue
+    if (typeof version.integrity === 'string' && version.integrity !== '' && !/^sha512-[A-Za-z0-9+/=]+$/.test(version.integrity)) {
+      problems.push(`${plugin.name}@${version.version}: integrity is not a sha512-<base64> digest`)
+    }
+    if (OFFLINE || shapeBroken) continue
     const spec = `${plugin.name}@${version.version}`
     const exists = npmView(spec, 'version')
     if (exists.status !== 'ok') {
@@ -140,11 +146,19 @@ for (const plugin of catalog.plugins ?? []) {
       problems.push(`${spec}: catalog claims provenance but npm has none`)
     }
   }
+  if (OFFLINE) continue
   const status = httpStatus(plugin.repo)
   if (status === undefined || status < 200 || status >= 400) {
     problems.push(`${plugin.name}: repo not reachable (${String(status)})`)
   }
 }
+
+// Name ordering must be deterministic (PRs are told to keep entries sorted).
+const order = (catalog.plugins ?? []).map(plugin => plugin.name)
+const sortedOrder = [...order].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
+order.forEach((name, index) => {
+  if (name !== sortedOrder[index]) problems.push(`catalog not sorted at position ${index}: ${name} (expected ${sortedOrder[index]})`)
+})
 
 if (changed) {
   writeFileSync(CATALOG_PATH, `${JSON.stringify(catalog, null, 2)}\n`)
@@ -155,4 +169,6 @@ if (problems.length > 0) {
   for (const problem of problems) process.stderr.write(`FAIL ${problem}\n`)
   process.exit(1)
 }
-process.stdout.write(`registry OK: ${String(catalog.plugins?.length)} plugins verified (shape + npm + integrity + repo)\n`)
+process.stdout.write(OFFLINE
+  ? `registry OK (offline shape check): ${String(catalog.plugins?.length)} plugins verified\n`
+  : `registry OK: ${String(catalog.plugins?.length)} plugins verified (shape + npm + integrity + repo)\n`)

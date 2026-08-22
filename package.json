@@ -1,0 +1,10 @@
+{
+  "name": "dsh-community-plugins-registry",
+  "private": true,
+  "description": "Compatibility registry for official DeepSeek Harness plugins (metadata only, zero dependencies)",
+  "type": "module",
+  "scripts": {
+    "verify": "node scripts/verify.mjs",
+    "verify:offline": "node scripts/verify.mjs --offline"
+  }
+}
