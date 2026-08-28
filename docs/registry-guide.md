@@ -99,6 +99,6 @@ existence
 
 - [Canonical Product：dsh-community](https://github.com/kamanager2012/dsh-community)
 - [Community Labs](https://github.com/kamanager2012/deepseek-harness-suite)
-- [Marketplace 安装体验](https://github.com/kamanager2012/dsh-marketplace)
+- [Marketplace 安装体验](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace)
 - [Handbook 插件章节](https://kamanager2012.github.io/deepseek-harness-handbook/content/10-plugins/)
 - [官方 Runtime](https://github.com/deepseek-ai/deepseek-harness)

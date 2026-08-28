@@ -7,7 +7,7 @@
 本仓库只维护官方 DeepSeek Harness 插件的公开目录、版本和验证信息。
 它不是 Runtime、不是 Plugin Manager，也不是另一个发行版；安装仍尽量走官方
 `dsh plugin add` 链路。浏览和安装体验由
-[`dsh-marketplace`](https://github.com/kamanager2012/dsh-marketplace) 提供。
+[`dsh-community` 的 marketplace 包](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace) 提供。
 
 ## 当前目录状态
 
@@ -60,7 +60,7 @@ existence → install → compose → runtime smoke
 | [`deepseek-harness-suite`](https://github.com/kamanager2012/deepseek-harness-suite) | Community Labs，实验能力验证 | [Labs](https://github.com/kamanager2012/deepseek-harness-suite) |
 | [`deepseek-harness-handbook`](https://github.com/kamanager2012/deepseek-harness-handbook) | 使用、验收和运维证据 | [在线手册](https://kamanager2012.github.io/deepseek-harness-handbook/) |
 | `dsh-community-plugins` | 插件兼容性元数据 | 本仓库的 `catalog.json` |
-| [`dsh-marketplace`](https://github.com/kamanager2012/dsh-marketplace) | 浏览、搜索和安装 UX | `dsh-marketplace` CLI |
+| [`dsh-community` packages/marketplace](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace) | 浏览、搜索和安装 UX | `pnpm marketplace` / `dsh-marketplace` CLI |
 | [`dsh-community-edition`](https://github.com/kamanager2012/dsh-community-edition) | Merge & Archive | [历史参考](https://github.com/kamanager2012/dsh-community-edition) |
 
 ## 文档入口
@@ -90,7 +90,7 @@ existence → install → compose → runtime smoke
 1. 在 `catalog.json` 的 `plugins` 数组中增加一条记录，并保持名称排序；
 2. 提交 Pull Request，让 CI 校验 JSON 结构和字段完整性；
 3. 提供公开源码、可安装包和对应的 Runtime 验证线；
-4. 合并后由 `dsh-marketplace` 读取目录，安装仍调用官方 `dsh plugin add`。
+4. 合并后由 `dsh-community` 的 marketplace CLI 读取目录，安装仍调用官方 `dsh plugin add`。
 
 ## 收录边界
 

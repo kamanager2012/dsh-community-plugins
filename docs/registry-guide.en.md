@@ -99,6 +99,6 @@ This table describes **compatibility** evidence, a separate axis from `security.
 
 - [Canonical Product: dsh-community](https://github.com/kamanager2012/dsh-community)
 - [Community Labs](https://github.com/kamanager2012/deepseek-harness-suite)
-- [Marketplace install UX](https://github.com/kamanager2012/dsh-marketplace)
+- [Marketplace install UX](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace)
 - [Handbook plugin section](https://kamanager2012.github.io/deepseek-harness-handbook/en/10-plugins/)
 - [Official Runtime](https://github.com/deepseek-ai/deepseek-harness)

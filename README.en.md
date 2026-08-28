@@ -7,7 +7,8 @@
 This repository maintains public plugin metadata, tested versions, and compatibility
 evidence for the official DeepSeek Harness ecosystem. It is not a Runtime, a Plugin
 Manager, or another distribution. Installation should remain on the official
-`dsh plugin add` chain; [`dsh-marketplace`](https://github.com/kamanager2012/dsh-marketplace)
+`dsh plugin add` chain; the
+[`dsh-community` marketplace package](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace)
 provides browse, search, and install UX.
 
 ## Current catalog status
@@ -63,7 +64,7 @@ Entries currently rated `risk: high` or `medium` are `@deepseek-harness-tui/dsh-
 | [`deepseek-harness-suite`](https://github.com/kamanager2012/deepseek-harness-suite) | Community Labs for experimental validation | [Labs](https://github.com/kamanager2012/deepseek-harness-suite) |
 | [`deepseek-harness-handbook`](https://github.com/kamanager2012/deepseek-harness-handbook) | Knowledge, evidence, and operations | [Online handbook](https://kamanager2012.github.io/deepseek-harness-handbook/) |
 | `dsh-community-plugins` | Plugin metadata and compatibility status | `catalog.json` in this repository |
-| [`dsh-marketplace`](https://github.com/kamanager2012/dsh-marketplace) | Discovery and distribution UX | `dsh-marketplace` CLI |
+| [`dsh-community` packages/marketplace](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace) | Discovery and distribution UX | `pnpm marketplace` / `dsh-marketplace` CLI |
 | [`dsh-community-edition`](https://github.com/kamanager2012/dsh-community-edition) | Merge & Archive | [Historical reference](https://github.com/kamanager2012/dsh-community-edition) |
 
 ## Catalog schema
@@ -94,7 +95,7 @@ assuming compatibility or safety.
 1. Add an entry to the alphabetized `plugins` array in `catalog.json`.
 2. Open a Pull Request so CI can verify shape, npm existence, version, `dist.integrity`, and repo reachability.
 3. Provide a public source repository, an installable package, and the tested Runtime line.
-4. After merge, `dsh-marketplace` can read the catalog; installation still calls the official `dsh plugin add` command.
+4. After merge, the `dsh-community` marketplace CLI can read the catalog; installation still calls the official `dsh plugin add` command.
 
 Every catalog entry is also checked by the `compose-catalog` workflow: the official `dsh plugin add` install plus a `--dump-config` composition assertion per version, in an isolated `DSH_HOME`.
 
