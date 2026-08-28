@@ -1,116 +1,24 @@
-# dsh-community-plugins
+# dsh-community-plugins has moved
 
-**Community plugin compatibility registry for DeepSeek Harness.**
+**Source of truth is now [`dsh-community/packages/marketplace`](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace).** The catalog file is [`catalog.json`](https://github.com/kamanager2012/dsh-community/blob/main/packages/marketplace/catalog.json).
 
 [简体中文](README.md) | **English**
 
-This repository maintains public plugin metadata, tested versions, and compatibility
-evidence for the official DeepSeek Harness ecosystem. It is not a Runtime, a Plugin
-Manager, or another distribution. Installation should remain on the official
-`dsh plugin add` chain; the
-[`dsh-community` marketplace package](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace)
-provides browse, search, and install UX.
+This repository is archived. Compatibility catalog, verification CI, and the install entry live in the product repo. Installation still calls official `dsh plugin add`.
 
-## Current catalog status
+The `catalog.json` at the root of this repo remains only so already-shipped clients can keep fetching the old raw GitHub URL. New catalog changes belong in `dsh-community`.
 
-The catalog contains **9 entries in total = 8 third-party community plugins + 1 reference TUI entry**. The
-third-party plugins were installed through the official `dsh plugin add` path and compose-tested against the
-`0.1.1-rc.2` line.
-Do not treat the raw entry count as the number of third-party production-compatible plugins.
-Canonical Latest / kernel pin / five endpoints live in
-[`dsh-community/docs/current-release.json`](https://github.com/kamanager2012/dsh-community/blob/main/docs/current-release.json).
-`testedDsh` is `0.1.1-rc.2` (compose passed; restart-after-install is still unverified).
+## How to run it
 
-The priority is evidence depth, not growing from 9 to 50 entries:
-
-```text
-existence → install → compose → runtime smoke
-         → package digest → provenance → DSH compatibility matrix
+```sh
+git clone https://github.com/kamanager2012/dsh-community
+cd dsh-community
+pnpm install
+pnpm marketplace -- list
 ```
 
-Until those checks exist, versions without a matching Runtime line remain `[UNVERIFIED]`.
+Do not open catalog PRs against this repository.
 
-The five Community endpoints are shipped by
-[`dsh-community`](https://github.com/kamanager2012/dsh-community): WSL/Linux Terminal,
-Windows Desktop, macOS Desktop, Linux AppImage, and Android (archived Labs, `[UNVERIFIED]`). Official Web is
-the kernel's own UI; this registry records plugin compatibility and
-does not distribute those endpoints.
+## Why this GitHub repo still exists
 
-The automated verification ladder currently covers:
-
-| Level | Check | Status |
-|---|---|---|
-| existence | `npm view <name>@<version>` exists at the declared version | ✅ CI |
-| package digest | npm `dist.integrity` matches the catalog | ✅ CI |
-| provenance | npm publication provenance is recorded when present | ✅ CI |
-| repo | public repository URL is reachable | ✅ CI |
-| shape | schema, category, and official `testedDsh` line | ✅ CI |
-| install / compose | official `dsh plugin add` plus `--dump-config`, isolated `DSH_HOME` per plugin | ✅ CI |
-| runtime smoke | real-session smoke test | Manual; record evidence in `notes` |
-| security metadata | every version must disclose network/data-egress/credentials/filesystem/process/persistence behavior; `requiresConfirmation: true` is mandatory whenever `risk` is not `low` | ✅ CI (shape + consistency); content accuracy is manually reviewed |
-
-Entries currently rated `risk: high` or `medium` are `@deepseek-harness-tui/dsh-tui`, `dsh-lan-access`, and `dsh-voice` (all `high`), plus `dsh-memory-vault` and `dsh-rtk-optimizer` (both `medium`). See each version's `security` field in `catalog.json`, and the field reference in the [registry guide](docs/registry-guide.en.md#security-metadata).
-
-> Known limitation: GitHub automatically disables scheduled workflows after 60 days
-> without repository activity (email notification only). The daily drift checks depend
-> on these crons; after long quiet periods, run `node scripts/verify.mjs` and
-> `node scripts/compose-check.mjs` manually once — do not assume "CI green = still verified".
-
-## Position in the public ecosystem
-
-| Repository | Role | Entry |
-|---|---|---|
-| [`dsh-community`](https://github.com/kamanager2012/dsh-community) | Canonical Product and only normal download entry | [Latest release](https://github.com/kamanager2012/dsh-community/releases/latest) |
-| [`deepseek-harness-handbook`](https://github.com/kamanager2012/deepseek-harness-handbook) | Knowledge, evidence, and operations | [Online handbook](https://kamanager2012.github.io/deepseek-harness-handbook/) |
-| `dsh-community-plugins` | Plugin metadata and compatibility status | `catalog.json` in this repository |
-| [`dsh-community` packages/marketplace](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace) | Discovery and distribution UX | `pnpm marketplace` / `dsh-marketplace` CLI |
-| [`deepseek-harness-suite`](https://github.com/kamanager2012/deepseek-harness-suite) | Archived Labs | Do not install from there |
-| [`dsh-marketplace`](https://github.com/kamanager2012/dsh-marketplace) | Archived | Redirect to the product repo marketplace package |
-| [`dsh-community-edition`](https://github.com/kamanager2012/dsh-community-edition) | Archived | Do not download from there |
-
-## Catalog schema
-
-Every plugin entry should identify:
-
-| Field | Meaning |
-|---|---|
-| `name` | npm package name; it must install through `dsh plugin add <name>` |
-| `description` | Short, verifiable description |
-| `author` | Author or organization |
-| `repo` | Source repository URL |
-| `versions` | Tested versions with `version`, `testedDsh`, optional `notes`, and required `security` (structured security metadata) |
-| `category` | `ui`, `tool`, `provider`, `workflow`, or `other` |
-
-`testedDsh` records the official Runtime line actually tested, for example
-`0.1.1-rc.1`. It is not a promise to track the newest Runtime. Consumers should
-mark an entry `[UNVERIFIED]` when no tested line matches their Runtime instead of
-assuming compatibility or safety.
-
-## Documentation
-
-- [Registry and verification guide](docs/registry-guide.en.md)
-- [中文验证指南](docs/registry-guide.md)
-
-## Submit a plugin
-
-1. Add an entry to the alphabetized `plugins` array in `catalog.json`.
-2. Open a Pull Request so CI can verify shape, npm existence, version, `dist.integrity`, and repo reachability.
-3. Provide a public source repository, an installable package, and the tested Runtime line.
-4. After merge, the `dsh-community` marketplace CLI can read the catalog; installation still calls the official `dsh plugin add` command.
-
-Every catalog entry is also checked by the `compose-catalog` workflow: the official `dsh plugin add` install plus a `--dump-config` composition assertion per version, in an isolated `DSH_HOME`.
-
-## Registry boundaries
-
-- Include only packages that can be installed from a public registry.
-- State private credential requirements instead of implying unconditional availability.
-- Do not replace installation smoke tests and version evidence with README claims.
-- Do not implement a Runtime, installer, or second Session source of truth here.
-
-See the [DeepSeek Harness Handbook](https://kamanager2012.github.io/deepseek-harness-handbook/)
-for the operational and security guidance behind these boundaries.
-
-## License
-
-This repository (registry metadata, the `catalog.json` schema, and the validation scripts) is released under [MIT](LICENSE).
-The license covers only this repository's own content; each third-party plugin listed in `catalog.json` is governed by the license in its own repository (see its `repo` field).
+Old docs, bookmarks, and published Desktop / CLI builds fetch `catalog.json` from this raw URL. That address must not 404. This is a redirect, not a second registry.
