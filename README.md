@@ -42,6 +42,9 @@ existence → install → compose → runtime smoke
 | shape | 字段、分类、`testedDsh` 官方 rc 线 | ✅ CI |
 | install / compose | 官方 `dsh plugin add` + `--dump-config` 合成断言，每插件独立 DSH_HOME | ✅ CI |
 | runtime smoke | 真实会话运行冒烟 | 人工验证，证据写入 `notes` |
+| security 元数据 | 每个版本必须声明网络/外传数据/凭据/文件/进程行为/持久化位置，`risk` 非 `low` 时必须 `requiresConfirmation: true` | ✅ CI（结构与一致性），内容准确性为人工核实 |
+
+`risk: high` 或 `medium` 的条目当前是 `@deepseek-harness-tui/dsh-tui`、`dsh-lan-access`、`dsh-voice`（均为 `high`）与 `dsh-memory-vault`、`dsh-rtk-optimizer`（均为 `medium`）；具体披露见 `catalog.json` 每个版本的 `security` 字段，字段含义见[注册表与验证指南](docs/registry-guide.md#安全元数据)。
 
 > 已知限制：GitHub 对 60 天无仓库活动的 schedule 会自动禁用（仅邮件通知）。
 > 每日漂移检测依赖这些 cron；长期无提交时请手动跑一次 `node scripts/verify.mjs`
@@ -75,7 +78,7 @@ existence → install → compose → runtime smoke
 | `description` | 简短、可验证的插件描述 |
 | `author` | 作者或组织 |
 | `repo` | 源码仓库 URL |
-| `versions` | 已验证版本数组：`version`、`testedDsh`、可选 `notes` |
+| `versions` | 已验证版本数组：`version`、`testedDsh`、可选 `notes`、必填的 `security`（结构化安全元数据） |
 | `category` | `ui`、`tool`、`provider`、`workflow` 或 `other` |
 
 `testedDsh` 表示官方 DSH Runtime 的实际验证线，例如 `0.1.1-rc.1`。
@@ -95,3 +98,8 @@ existence → install → compose → runtime smoke
 - 不把需要未声明私有凭据才能运行的插件写成无条件可用；
 - 不用 README 或作者声明替代安装 smoke test 和版本证据；
 - 不在本仓库实现 Runtime、插件安装器或新的 Session 真源。
+
+## License
+
+本仓库（注册表元数据、`catalog.json` 结构与校验脚本）以 [MIT](LICENSE) 许可发布。
+该许可证只覆盖本仓库自身的内容；`catalog.json` 中登记的每个第三方插件由其各自仓库的许可证约束，见对应 `repo` 字段。

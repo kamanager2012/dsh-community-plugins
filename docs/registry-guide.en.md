@@ -27,8 +27,31 @@ Entries in `catalog.json` should provide:
 | `versions[].version` | Tested plugin version |
 | `versions[].testedDsh` | Official Runtime line actually used |
 | `versions[].notes` | Facts from install, composition, or runtime smoke tests |
+| `versions[].security` | Structured security metadata, see "Security metadata" below |
 
 `testedDsh` links evidence; it is not a promise of permanent compatibility. A version without a matching Runtime line must be shown as `[UNVERIFIED]`.
+
+## Security metadata
+
+`versions[].security` gives a structured permission disclosure for every listed version, instead of relying on the author's README or claims to judge whether a plugin is safe. `scripts/verify.mjs` validates its shape; a missing or malformed field fails CI. Fields:
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `network` | string | Network behavior the plugin initiates or listens on; write "none" if there is none |
+| `dataEgress` | string | What data leaves the local machine, and where it goes |
+| `credentials` | string | Credentials/keys the plugin accesses, stores, or requires |
+| `filesystem` | string | File reads/writes outside the plugin's own install directory |
+| `processExecution` | string | Whether it spawns subprocesses, calls external binaries, or intercepts/rewrites other tool calls |
+| `persistence` | string | Where state survives a restart or across sessions |
+| `risk` | `"low"` \| `"medium"` \| `"high"` | Overall risk level |
+| `requiresConfirmation` | boolean | Whether install should prompt an explicit user confirmation; must be `true` whenever `risk` is not `low` (enforced by CI) |
+| `manualReviewStatus` | `"unreviewed"` \| `"partial"` \| `"reviewed"` | How thoroughly this disclosure itself has been checked by a human; **this is about the disclosure, not an independent dynamic security test of the plugin**, and is a separate axis from the top-level `[VERIFIED]`/`[PARTIAL]`/`[UNVERIFIED]` compatibility status |
+| `manualReviewNote` | string | The concrete evidence behind the assessment (e.g. which part of the author's README was used) |
+| `lastReviewedAt` | string (`YYYY-MM-DD`) | Date this security metadata was last reviewed |
+
+For the six descriptive fields (`network`, `dataEgress`, `credentials`, `filesystem`, `processExecution`, `persistence`), write "none" explicitly when there is no such behavior — do not leave them empty. CI rejects empty strings because "not written" and "checked, and confirmed absent" are different claims.
+
+When adding or updating an entry, the `security` content must come from actually reading the plugin's source or README, not from guessing. If there isn't enough information to judge a dimension, keep `manualReviewStatus` at `unreviewed` and explain the missing evidence in `manualReviewNote` instead of writing a plausible-sounding guess.
 
 ## Verification ladder
 
@@ -56,9 +79,9 @@ Recommended evidence for each entry:
 ## Submission flow
 
 1. Prepare public installation instructions and a minimal smoke test in the plugin repository;
-2. Add an entry to `catalog.json` with consistent fields and naming;
+2. Add an entry to `catalog.json` with consistent fields and naming, including `versions[].security` (see above; `node scripts/verify.mjs --offline` validates its shape);
 3. Include the Runtime version, install command, and result in the Pull Request;
-4. Let maintainers review the evidence without turning unknown fields into guarantees;
+4. Let maintainers review the evidence and the security metadata without turning unknown fields into guarantees;
 5. Marketplace reads the registry, while installation returns to official `dsh plugin add`.
 
 ## Status shown to users
@@ -70,7 +93,7 @@ Recommended evidence for each entry:
 | `[UNVERIFIED]` | No matching Runtime line or evidence is stale | Treat as unknown by default |
 | `[INCOMPATIBLE]` | Known incompatibility with the current Runtime line | Do not recommend by default |
 
-The registry describes compatibility evidence, not whether a plugin is trustworthy. For plugins that access the network, files, processes, credentials, or system mutation, read the source and permission notes separately.
+This table describes **compatibility** evidence, a separate axis from `security.manualReviewStatus`, which describes how thoroughly the **security disclosure** has been checked: a `[VERIFIED]` plugin can still be `risk: high`. The `security` fields do not decide whether a plugin is trustworthy for you; for plugins that access the network, files, processes, credentials, or system mutation, read the source and permission notes separately.
 
 ## Ecosystem links
 

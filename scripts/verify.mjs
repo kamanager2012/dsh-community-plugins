@@ -7,6 +7,7 @@
  *   3. npm dist.integrity matches the recorded digest (fail-closed)
  *   4. repo URL resolves (HTTP 2xx/3xx)
  *   5. testedDsh is a known official rc line
+ *   6. security metadata shape, plus the risk/requiresConfirmation invariant
  *
  * Usage: node scripts/verify.mjs [--write-integrity]
  */
@@ -24,6 +25,49 @@ const OFFLINE = process.argv.includes('--offline')
 const NPM_NAME_RE = /^(@[a-z0-9-][a-z0-9-._]*\/)?[a-z0-9-][a-z0-9-._]*$/
 const SEMVER_RE = /^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?$/
 const REPO_URL_RE = /^https:\/\/github\.com\/[\w.-]+\/[\w.-]+$/
+const ISO_DATE_RE = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/
+
+// Keep in sync with docs/registry-guide.md ("安全元数据").
+const RISK_LEVELS = ['low', 'medium', 'high']
+const MANUAL_REVIEW_STATUSES = ['unreviewed', 'partial', 'reviewed']
+const SECURITY_TEXT_FIELDS = [
+  'network',
+  'dataEgress',
+  'credentials',
+  'filesystem',
+  'processExecution',
+  'persistence',
+  'manualReviewNote',
+]
+
+/** Every entry must disclose its security posture; risk above 'low' must gate on explicit confirmation. */
+function checkSecurity(plugin, version, problems) {
+  const spec = `${plugin.name}@${version.version}`
+  const security = version.security
+  if (security === undefined || security === null || typeof security !== 'object' || Array.isArray(security)) {
+    problems.push(`${spec}: security metadata missing`)
+    return
+  }
+  for (const field of SECURITY_TEXT_FIELDS) {
+    if (typeof security[field] !== 'string' || security[field].trim() === '') {
+      problems.push(`${spec}: security.${field} missing`)
+    }
+  }
+  if (!RISK_LEVELS.includes(security.risk)) {
+    problems.push(`${spec}: security.risk must be one of ${RISK_LEVELS.join(', ')}`)
+  }
+  if (typeof security.requiresConfirmation !== 'boolean') {
+    problems.push(`${spec}: security.requiresConfirmation must be boolean`)
+  } else if (security.risk !== 'low' && security.requiresConfirmation !== true) {
+    problems.push(`${spec}: security.risk=${String(security.risk)} requires security.requiresConfirmation=true`)
+  }
+  if (!MANUAL_REVIEW_STATUSES.includes(security.manualReviewStatus)) {
+    problems.push(`${spec}: security.manualReviewStatus must be one of ${MANUAL_REVIEW_STATUSES.join(', ')}`)
+  }
+  if (typeof security.lastReviewedAt !== 'string' || !ISO_DATE_RE.test(security.lastReviewedAt)) {
+    problems.push(`${spec}: security.lastReviewedAt must be an ISO date (YYYY-MM-DD)`)
+  }
+}
 
 const CATALOG_PATH = fileURLToPath(new URL('../catalog.json', import.meta.url))
 
@@ -103,6 +147,7 @@ for (const plugin of catalog.plugins ?? []) {
     if (typeof version.integrity === 'string' && version.integrity !== '' && !/^sha512-[A-Za-z0-9+/=]+$/.test(version.integrity)) {
       problems.push(`${plugin.name}@${version.version}: integrity is not a sha512-<base64> digest`)
     }
+    checkSecurity(plugin, version, problems)
     if (OFFLINE || shapeBroken) continue
     const spec = `${plugin.name}@${version.version}`
     const exists = npmView(spec, 'version')

@@ -46,6 +46,9 @@ The automated verification ladder currently covers:
 | shape | schema, category, and official `testedDsh` line | ✅ CI |
 | install / compose | official `dsh plugin add` plus `--dump-config`, isolated `DSH_HOME` per plugin | ✅ CI |
 | runtime smoke | real-session smoke test | Manual; record evidence in `notes` |
+| security metadata | every version must disclose network/data-egress/credentials/filesystem/process/persistence behavior; `requiresConfirmation: true` is mandatory whenever `risk` is not `low` | ✅ CI (shape + consistency); content accuracy is manually reviewed |
+
+Entries currently rated `risk: high` or `medium` are `@deepseek-harness-tui/dsh-tui`, `dsh-lan-access`, and `dsh-voice` (all `high`), plus `dsh-memory-vault` and `dsh-rtk-optimizer` (both `medium`). See each version's `security` field in `catalog.json`, and the field reference in the [registry guide](docs/registry-guide.en.md#security-metadata).
 
 > Known limitation: GitHub automatically disables scheduled workflows after 60 days
 > without repository activity (email notification only). The daily drift checks depend
@@ -73,7 +76,7 @@ Every plugin entry should identify:
 | `description` | Short, verifiable description |
 | `author` | Author or organization |
 | `repo` | Source repository URL |
-| `versions` | Tested versions with `version`, `testedDsh`, and optional `notes` |
+| `versions` | Tested versions with `version`, `testedDsh`, optional `notes`, and required `security` (structured security metadata) |
 | `category` | `ui`, `tool`, `provider`, `workflow`, or `other` |
 
 `testedDsh` records the official Runtime line actually tested, for example
@@ -104,3 +107,8 @@ Every catalog entry is also checked by the `compose-catalog` workflow: the offic
 
 See the [DeepSeek Harness Handbook](https://kamanager2012.github.io/deepseek-harness-handbook/)
 for the operational and security guidance behind these boundaries.
+
+## License
+
+This repository (registry metadata, the `catalog.json` schema, and the validation scripts) is released under [MIT](LICENSE).
+The license covers only this repository's own content; each third-party plugin listed in `catalog.json` is governed by the license in its own repository (see its `repo` field).

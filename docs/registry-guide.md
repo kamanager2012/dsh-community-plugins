@@ -27,8 +27,31 @@
 | `versions[].version` | 被验证的插件版本 |
 | `versions[].testedDsh` | 实际使用的官方 Runtime 版本线 |
 | `versions[].notes` | 安装、组合或运行 smoke test 的事实说明 |
+| `versions[].security` | 结构化安全元数据，见下节「安全元数据」 |
 
 `testedDsh` 是证据关联，不是“永远兼容”承诺。没有匹配当前 Runtime 的版本必须显示 `[UNVERIFIED]`。
+
+## 安全元数据
+
+`versions[].security` 对每个已收录版本给出结构化的权限披露，取代仅凭 README 或作者自述判断插件是否安全。`scripts/verify.mjs` 会校验其结构，缺失或格式错误会让 CI 失败。字段：
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `network` | string | 插件会发起或监听的网络行为；没有则写“无” |
+| `dataEgress` | string | 哪些数据会离开本机、发往何处 |
+| `credentials` | string | 插件访问、存储或要求提供的凭据/密钥 |
+| `filesystem` | string | 插件自身安装目录之外的文件读写范围 |
+| `processExecution` | string | 是否派生子进程、调用外部二进制，或拦截/改写其他工具调用 |
+| `persistence` | string | 状态在重启或跨会话之间保存在何处 |
+| `risk` | `"low"` \| `"medium"` \| `"high"` | 综合风险等级 |
+| `requiresConfirmation` | boolean | 安装前是否应向用户显式确认；`risk` 非 `low` 时必须为 `true`（CI 强制） |
+| `manualReviewStatus` | `"unreviewed"` \| `"partial"` \| `"reviewed"` | 人工核实这份安全披露本身的程度；**这是对披露内容的核实状态，不是对插件本身运行安全性的独立动态测试**，与顶层的 `[VERIFIED]`/`[PARTIAL]`/`[UNVERIFIED]` 兼容性状态是两套不同的评估维度 |
+| `manualReviewNote` | string | 支撑以上判断的具体证据来源（例如引用了作者 README 的哪段自述） |
+| `lastReviewedAt` | string (`YYYY-MM-DD`) | 本条安全元数据最后核实的日期 |
+
+对 `network`/`dataEgress`/`credentials`/`filesystem`/`processExecution`/`persistence` 六个描述字段，找不到对应行为时应明确写“无”，不要留空——空字符串会被 CI 拒绝，因为“没写”和“核实过、确实没有”是两件不同的事。
+
+新增或更新条目时，`security` 的内容应来自对该插件源码或 README 的实际阅读，而不是猜测；如果拿不到足够信息判断某个维度，`manualReviewStatus` 应保持 `unreviewed` 并在 `manualReviewNote` 里说明还缺什么证据，而不是编造一个看起来合理的描述。
 
 ## 验证阶梯
 
@@ -56,9 +79,9 @@ existence
 ## 提交流程
 
 1. 先在插件自己的仓库准备公开安装说明和最小 smoke test；
-2. 在 `catalog.json` 增加记录，保持字段和名称格式一致；
+2. 在 `catalog.json` 增加记录，保持字段和名称格式一致，并填写 `versions[].security`（见上节，`node scripts/verify.mjs --offline` 会校验其结构）；
 3. 在 Pull Request 中附上 Runtime 版本、安装命令和结果；
-4. 维护者复核目录内容，不把未验证字段写成保证；
+4. 维护者复核目录内容与安全元数据，不把未验证字段写成保证；
 5. Marketplace 读取注册表，安装仍回到官方 `dsh plugin add`。
 
 ## 用户看到的状态
@@ -70,7 +93,7 @@ existence
 | `[UNVERIFIED]` | 没有匹配 Runtime 线或证据过期 | 默认按未知来源处理 |
 | `[INCOMPATIBLE]` | 已知与当前 Runtime 线不兼容 | 不进入默认安装建议 |
 
-注册表只描述兼容性证据，不替用户判断插件是否值得信任。涉及网络、文件、进程、凭据或系统修改的插件，必须单独阅读源码和权限说明。
+这张表描述的是**兼容性**证据，与 `security.manualReviewStatus` 描述的**安全披露核实程度**是两个独立维度：一个 `[VERIFIED]` 的插件仍可能是 `risk: high`；`security` 字段不替用户判断插件是否值得信任，涉及网络、文件、进程、凭据或系统修改的插件，仍必须单独阅读源码和权限说明。
 
 ## 生态跳转
 
