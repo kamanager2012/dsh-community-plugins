@@ -98,7 +98,7 @@ existence
 ## 生态跳转
 
 - [Canonical Product：dsh-community](https://github.com/kamanager2012/dsh-community)
-- [Community Labs](https://github.com/kamanager2012/deepseek-harness-suite)
+- [已归档 Labs](https://github.com/kamanager2012/deepseek-harness-suite)（不要从那里安装）
 - [Marketplace 安装体验](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace)
 - [Handbook 插件章节](https://kamanager2012.github.io/deepseek-harness-handbook/content/10-plugins/)
 - [官方 Runtime](https://github.com/deepseek-ai/deepseek-harness)

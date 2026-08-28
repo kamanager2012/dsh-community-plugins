@@ -32,7 +32,7 @@ Until those checks exist, versions without a matching Runtime line remain `[UNVE
 
 The five Community endpoints are shipped by
 [`dsh-community`](https://github.com/kamanager2012/dsh-community): WSL/Linux Terminal,
-Windows Desktop, macOS Desktop, Linux AppImage, and Android (Labs). Official Web is
+Windows Desktop, macOS Desktop, Linux AppImage, and Android (archived Labs, `[UNVERIFIED]`). Official Web is
 the kernel's own UI; this registry records plugin compatibility and
 does not distribute those endpoints.
 
@@ -56,16 +56,17 @@ Entries currently rated `risk: high` or `medium` are `@deepseek-harness-tui/dsh-
 > on these crons; after long quiet periods, run `node scripts/verify.mjs` and
 > `node scripts/compose-check.mjs` manually once — do not assume "CI green = still verified".
 
-## Position in the ecosystem
+## Position in the public ecosystem
 
 | Repository | Role | Entry |
 |---|---|---|
 | [`dsh-community`](https://github.com/kamanager2012/dsh-community) | Canonical Product and only normal download entry | [Latest release](https://github.com/kamanager2012/dsh-community/releases/latest) |
-| [`deepseek-harness-suite`](https://github.com/kamanager2012/deepseek-harness-suite) | Community Labs for experimental validation | [Labs](https://github.com/kamanager2012/deepseek-harness-suite) |
 | [`deepseek-harness-handbook`](https://github.com/kamanager2012/deepseek-harness-handbook) | Knowledge, evidence, and operations | [Online handbook](https://kamanager2012.github.io/deepseek-harness-handbook/) |
 | `dsh-community-plugins` | Plugin metadata and compatibility status | `catalog.json` in this repository |
 | [`dsh-community` packages/marketplace](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace) | Discovery and distribution UX | `pnpm marketplace` / `dsh-marketplace` CLI |
-| [`dsh-community-edition`](https://github.com/kamanager2012/dsh-community-edition) | Merge & Archive | [Historical reference](https://github.com/kamanager2012/dsh-community-edition) |
+| [`deepseek-harness-suite`](https://github.com/kamanager2012/deepseek-harness-suite) | Archived Labs | Do not install from there |
+| [`dsh-marketplace`](https://github.com/kamanager2012/dsh-marketplace) | Archived | Redirect to the product repo marketplace package |
+| [`dsh-community-edition`](https://github.com/kamanager2012/dsh-community-edition) | Archived | Do not download from there |
 
 ## Catalog schema
 

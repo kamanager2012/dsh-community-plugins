@@ -21,7 +21,7 @@
  > 本身随 `dsh-community` 发行，不属于本注册表。
 
 正式产品的五个社区端由 [`dsh-community`](https://github.com/kamanager2012/dsh-community)
-提供：WSL/Linux Terminal、Windows Desktop、macOS Desktop、Linux AppImage、Android（Labs）。官方 Web 是内核自带界面；
+提供：WSL/Linux Terminal、Windows Desktop、macOS Desktop、Linux AppImage、Android（已归档 Labs，`[UNVERIFIED]`）。官方 Web 是内核自带界面；
 本注册表只记录插件兼容性，不发行这些端。
 
 当前优先级不是把数量从 9 扩到 50，而是提高每个条目的证据深度：
@@ -52,16 +52,17 @@ existence → install → compose → runtime smoke
 
 在这些证据补齐前，未匹配 Runtime 线的版本必须保持 `[UNVERIFIED]`。
 
-## 在六仓生态中的位置
+## 在公开生态中的位置
 
 | 仓库 | 职责 | 入口 |
 |---|---|---|
 | [`dsh-community`](https://github.com/kamanager2012/dsh-community) | Canonical Product，唯一正式下载入口 | [Latest Release](https://github.com/kamanager2012/dsh-community/releases/latest) |
-| [`deepseek-harness-suite`](https://github.com/kamanager2012/deepseek-harness-suite) | Community Labs，实验能力验证 | [Labs](https://github.com/kamanager2012/deepseek-harness-suite) |
 | [`deepseek-harness-handbook`](https://github.com/kamanager2012/deepseek-harness-handbook) | 使用、验收和运维证据 | [在线手册](https://kamanager2012.github.io/deepseek-harness-handbook/) |
 | `dsh-community-plugins` | 插件兼容性元数据 | 本仓库的 `catalog.json` |
 | [`dsh-community` packages/marketplace](https://github.com/kamanager2012/dsh-community/tree/main/packages/marketplace) | 浏览、搜索和安装 UX | `pnpm marketplace` / `dsh-marketplace` CLI |
-| [`dsh-community-edition`](https://github.com/kamanager2012/dsh-community-edition) | Merge & Archive | [历史参考](https://github.com/kamanager2012/dsh-community-edition) |
+| [`deepseek-harness-suite`](https://github.com/kamanager2012/deepseek-harness-suite) | 已归档 Labs | 不要从那里安装 |
+| [`dsh-marketplace`](https://github.com/kamanager2012/dsh-marketplace) | 已归档 | 跳转到产品仓 marketplace 包 |
+| [`dsh-community-edition`](https://github.com/kamanager2012/dsh-community-edition) | 已归档 | 不要从那里下载 |
 
 ## 文档入口
 
